@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Registered Faces</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+</head>
+<body>
+  <h4>Register a new face</h4>
+  <p>
+    Upload an image with name of the person and the server will automatically handle the rest for you
+  </p>
+  <form id="image-form" action="/" method="POST" enctype="multipart/form-data">
+    <div class="row">
+      <input id="file_upload" type="file" name="file" accept="image/jpeg, image/png" />
+          <input id="custom-submit" type="button" class="btn btn-info" value="Submit">
+    </div>
+
+    <div class="registered mt-5">
+      List of currently registered users:
+      <ul>
+        {% for user in faces %}
+          <li>{{user}}</li>
+        {% endfor %}
+      </ul>
+
+    </div>
+
+    <div class="reload">
+      <a href="/force-reload-users">Reload Registered Users</a>
+    </div>
+  </form>
+
+  <script>
+      $(document).ready(function () {
+          $('#custom-submit').on('click', function () {
+              var data = new FormData($('#image-form')[0]);
+              $.ajax({
+                  type: 'POST',
+                  url: '/upload-user',
+                  data: data,
+                  contentType: false,
+                  cache: false,
+                  processData: false,
+                  success: function () {
+                      window.location.href = "/force-reload-users";
+                  },
+                  error: function (e) {
+                      console.log(e);
+                  }
+              });
+          })
+      });
+  </script>
+</body>
+
+
+</html>
